@@ -17,6 +17,7 @@ dependencies = [
   "chromadb>=0.5,<0.6",
   "fastapi>=0.115,<1",
   "openai>=1.59,<2",
+  "posthog>=5,<6",
   "pydantic>=2.10,<3",
   "pydantic-settings>=2.7,<3",
   "pypdf>=5,<6",
@@ -57,4 +58,3 @@ python_version = "3.11"
 warn_unused_configs = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
-

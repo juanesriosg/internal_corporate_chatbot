@@ -25,7 +25,7 @@ environment instead of maintaining a separate `requirements.txt`.
 | LLM provider | Deterministic grounded answer composer first; optional direct OpenAI or Azure OpenAI adapter | Direct OpenAI API or Azure OpenAI Service | Local Llama, Anthropic, Bedrock |
 | LLM model | Small/medium OpenAI chat model if API use is enabled | Cost-efficient default model plus stronger escalation model | One large model for every query |
 | Embeddings | `text-embedding-3-small` when API use is enabled; deterministic local vectorizer for no-key demo | `text-embedding-3-small`, upgrade to `text-embedding-3-large` if retrieval quality needs it | BGE/e5 local embeddings, Azure AI Search integrated vectorization |
-| Vector DB | Chroma persisted under `.local/` | Azure AI Search for hybrid search, or Postgres/pgvector if existing infra prefers it | FAISS, sqlite-vec, Pinecone, Weaviate |
+| Vector DB | Chroma persisted under `.local/` | Azure AI Search for hybrid search, or Postgres/pgvector if existing infra prefers it | scikit-learn, FAISS, sqlite-vec, Pinecone, Weaviate |
 | Orchestration | Custom Python modules | Same custom modules with provider adapters | LangChain, LlamaIndex |
 | Parsing | `pypdf`, `python-docx`, `beautifulsoup4`, markdown/plain text parser | Azure AI Document Intelligence or Unstructured for harder files | Custom-only parsing, OCR-only approach |
 | Backend API | FastAPI | FastAPI on Azure Container Apps, App Service, or Azure Functions | Flask, Django, Node/NestJS |
@@ -107,8 +107,9 @@ Prototype:
 
 Rationale:
 
-- Easy local install.
-- Supports metadata storage and vector retrieval.
+- Chroma is closer to the way a production RAG app uses a vector database.
+- It supports persisted collections and metadata filtering.
+- It is stronger than a pure TF-IDF prototype for a senior-level take-home.
 - Keeps generated index files outside the source corpus.
 - Simple enough for a reviewer to inspect and rebuild.
 
@@ -120,6 +121,8 @@ Production:
 
 Alternatives considered:
 
+- scikit-learn: lighter and transparent, but too basic as the main vector store
+  for this assignment.
 - FAISS: fast local vector search, but metadata filtering needs more custom
   code.
 - sqlite-vec: attractive local option, but less familiar to many reviewers.

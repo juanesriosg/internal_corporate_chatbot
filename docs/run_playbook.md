@@ -255,6 +255,9 @@ If dependencies fail to install:
 - Confirm Python is 3.11+.
 - Upgrade pip with `python -m pip install --upgrade pip`.
 - Recreate `.venv` from scratch.
+- If dependency install is slow on WSL, keep the project under the Linux
+  filesystem instead of a Windows-mounted path. Chroma has a larger dependency
+  tree and writes many files during installation.
 
 If `.env` is missing:
 
@@ -272,4 +275,3 @@ If retrieval returns restricted documents:
 - Stop and fix ACL filtering before continuing.
 - The invariant is that unauthorized chunks must never reach prompt
   construction.
-
