@@ -1,0 +1,23 @@
+Finance Quarter Close Notes - Confidential
+==========================================
+
+Document Metadata
+-----------------
+doc_id: NOTE-FIN-QC-20260630
+department: Finance
+sensitivity: restricted
+allowed_groups: finance, executives
+tenant_id: northstar
+meeting_date: 2026-06-30
+owner: Finance Operations
+stale: false
+
+Quarter close notes for Finance only.
+
+Action items:
+- All department accrual estimates are due by the third business day after quarter end.
+- Vendor invoices over USD 10,000 require cost-center owner confirmation before posting.
+- Deferred revenue review must be completed before financial statements are shared outside Finance.
+
+Restricted note:
+This document should not be retrieved for non-Finance users. It is useful for testing strict metadata filters and source attribution.

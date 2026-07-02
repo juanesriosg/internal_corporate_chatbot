@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>System Architecture Overview</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 920px; margin: 40px auto; line-height: 1.5; color: #202124; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f6f8; width: 220px; }
+    code { background: #f1f3f4; padding: 2px 4px; border-radius: 4px; }
+    .banner { background: #eef6ff; border-left: 5px solid #2b6cb0; padding: 12px; }
+  </style>
+</head>
+<body>
+  <h1>System Architecture Overview</h1>
+  <div class='banner'>Mock internal document for RAG, ACL, citation, and parser testing.</div>
+  <h2>Document Metadata</h2>
+  <table><tr><th>doc_id</th><td>ARCH-OVR-005</td></tr>
+<tr><th>department</th><td>Engineering</td></tr>
+<tr><th>sensitivity</th><td>internal</td></tr>
+<tr><th>allowed_groups</th><td>engineering, product, sre</td></tr>
+<tr><th>tenant_id</th><td>northstar</td></tr>
+<tr><th>effective_date</th><td>2026-05-10</td></tr>
+<tr><th>owner</th><td>Architecture Guild</td></tr>
+<tr><th>stale</th><td>false</td></tr></table>
+  <h2>Architecture Style</h2><p>Northstar uses a service-oriented architecture for customer-facing systems and event-driven workflows for asynchronous processing.</p><p>Synchronous APIs should have explicit timeouts and bounded retries. Asynchronous jobs should be idempotent.</p><h2>Core Components</h2><ul><li>API Gateway routes external traffic to service APIs.</li><li>Event Bus distributes domain events such as AccountCreated and InvoicePaid.</li><li>Data Platform stores analytical copies of events for reporting.</li><li>Knowledge Assistant uses ingestion, retrieval, orchestration, and evaluation components.</li></ul><h2>Design Rules</h2><p>Services own their databases. Shared database access across services is prohibited. Data contracts should be versioned and documented before breaking changes.</p>
+</body>
+</html>

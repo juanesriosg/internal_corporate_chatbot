@@ -1,0 +1,387 @@
+{
+  "corpus_name": "Northstar Digital Mock Corporate Knowledge Base",
+  "created_at": "2026-07-02",
+  "purpose": "Mock corpus for testing an internal corporate RAG chatbot across multiple formats, departments, sensitivities, stale docs, and ACL rules.",
+  "document_count": 20,
+  "formats": [
+    "docx",
+    "html",
+    "markdown",
+    "pdf",
+    "txt"
+  ],
+  "documents": [
+    {
+      "file": "pdf/hr/HR_PTO_Policy_2026.pdf",
+      "title": "HR PTO Policy 2026",
+      "format": "pdf",
+      "category": "HR policy",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "all-employees"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "pdf/security/Security_Incident_Response_Runbook.pdf",
+      "title": "Security Incident Response Runbook",
+      "format": "pdf",
+      "category": "Security runbook",
+      "department": "Security",
+      "sensitivity": "confidential",
+      "allowed_groups": [
+        "security",
+        "platform-leads"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "pdf/engineering/Engineering_API_Deployment_Guide.pdf",
+      "title": "Engineering API Deployment Guide",
+      "format": "pdf",
+      "category": "Technical documentation",
+      "department": "Engineering",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "engineering",
+        "platform",
+        "sre"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "pdf/finance/Finance_Travel_Reimbursement_Policy_CONFIDENTIAL.pdf",
+      "title": "Finance Travel Reimbursement Policy - Confidential",
+      "format": "pdf",
+      "category": "Finance policy",
+      "department": "Finance",
+      "sensitivity": "restricted",
+      "allowed_groups": [
+        "finance",
+        "executive-assistants"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "word/hr/Employee_Onboarding_Handbook.docx",
+      "title": "Employee Onboarding Handbook",
+      "format": "docx",
+      "category": "HR handbook",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "all-employees"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "word/hr/Remote_Work_Policy_2026.docx",
+      "title": "Remote Work Policy 2026",
+      "format": "docx",
+      "category": "HR policy",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "all-employees"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "word/security/Customer_Data_Handling_Standard.docx",
+      "title": "Customer Data Handling Standard",
+      "format": "docx",
+      "category": "Security policy",
+      "department": "Security",
+      "sensitivity": "confidential",
+      "allowed_groups": [
+        "security",
+        "engineering",
+        "support-leads"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "word/legal/Legal_Contract_Review_Playbook_RESTRICTED.docx",
+      "title": "Legal Contract Review Playbook - Restricted",
+      "format": "docx",
+      "category": "Legal playbook",
+      "department": "Legal",
+      "sensitivity": "restricted",
+      "allowed_groups": [
+        "legal",
+        "finance-leads",
+        "executives"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "markdown/engineering/platform-service-catalog.md",
+      "title": "Platform Service Catalog",
+      "format": "markdown",
+      "category": "Technical documentation",
+      "department": "Engineering",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "engineering",
+        "platform",
+        "sre"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "markdown/project-wiki/Project_Atlas_Status.md",
+      "title": "Project Atlas Status Wiki",
+      "format": "markdown",
+      "category": "Project wiki",
+      "department": "Product",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "product",
+        "engineering",
+        "design",
+        "executives"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "markdown/hr/benefits-faq.md",
+      "title": "Benefits FAQ",
+      "format": "markdown",
+      "category": "HR FAQ",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "all-employees"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "markdown/support/escalation-matrix.md",
+      "title": "Support Escalation Matrix",
+      "format": "markdown",
+      "category": "Support documentation",
+      "department": "Support",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "support",
+        "engineering",
+        "customer-success"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "html/wiki/system-architecture-overview.html",
+      "title": "System Architecture Overview",
+      "format": "html",
+      "category": "Architecture documentation",
+      "department": "Engineering",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "engineering",
+        "product",
+        "sre"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "html/docs/sso-access-control-design.html",
+      "title": "SSO and Access-Control Design",
+      "format": "html",
+      "category": "Security architecture",
+      "department": "Security",
+      "sensitivity": "confidential",
+      "allowed_groups": [
+        "security",
+        "platform",
+        "identity-team"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "html/wiki/product-launch-checklist.html",
+      "title": "Product Launch Checklist",
+      "format": "html",
+      "category": "Project wiki",
+      "department": "Product",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "product",
+        "engineering",
+        "marketing",
+        "support"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "notes/2026-06-12-architecture-review-notes.txt",
+      "title": "Architecture Review Notes - Knowledge Assistant",
+      "format": "txt",
+      "category": "Meeting notes",
+      "department": "Engineering",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "engineering",
+        "product",
+        "security"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "notes/hr-policy-change-draft-notes.txt",
+      "title": "HR Policy Change Draft Notes",
+      "format": "txt",
+      "category": "Meeting notes",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "hr",
+        "people-managers"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "notes/security-red-team-prompt-injection-drill.txt",
+      "title": "Security Red-Team Prompt Injection Drill",
+      "format": "txt",
+      "category": "Security notes",
+      "department": "Security",
+      "sensitivity": "confidential",
+      "allowed_groups": [
+        "security",
+        "ai-platform"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "notes/finance-quarter-close-notes-confidential.txt",
+      "title": "Finance Quarter Close Notes - Confidential",
+      "format": "txt",
+      "category": "Finance notes",
+      "department": "Finance",
+      "sensitivity": "restricted",
+      "allowed_groups": [
+        "finance",
+        "executives"
+      ],
+      "stale": false,
+      "description": ""
+    },
+    {
+      "file": "notes/legacy-remote-work-policy-2023-stale.txt",
+      "title": "Legacy Remote Work Policy 2023 - Stale",
+      "format": "txt",
+      "category": "Stale policy notes",
+      "department": "HR",
+      "sensitivity": "internal",
+      "allowed_groups": [
+        "all-employees"
+      ],
+      "stale": true,
+      "description": ""
+    }
+  ],
+  "recommended_acl_tests": [
+    {
+      "user": "eng_user",
+      "groups": [
+        "engineering"
+      ],
+      "should_retrieve": [
+        "Engineering API Deployment Guide",
+        "Platform Service Catalog"
+      ],
+      "should_not_retrieve": [
+        "Finance Travel Reimbursement Policy - Confidential",
+        "Legal Contract Review Playbook - Restricted"
+      ]
+    },
+    {
+      "user": "finance_user",
+      "groups": [
+        "finance"
+      ],
+      "should_retrieve": [
+        "Finance Travel Reimbursement Policy - Confidential",
+        "Finance Quarter Close Notes - Confidential"
+      ],
+      "should_not_retrieve": [
+        "Legal Contract Review Playbook - Restricted"
+      ]
+    },
+    {
+      "user": "all_employee",
+      "groups": [
+        "all-employees"
+      ],
+      "should_retrieve": [
+        "HR PTO Policy 2026",
+        "Benefits FAQ",
+        "Remote Work Policy 2026"
+      ],
+      "should_not_retrieve": [
+        "Security Incident Response Runbook"
+      ]
+    }
+  ],
+  "sample_questions": [
+    {
+      "question": "How many PTO days do full-time employees receive?",
+      "expected_source": "HR_PTO_Policy_2026.pdf"
+    },
+    {
+      "question": "Can contractors receive PTO?",
+      "expected_source": "HR_PTO_Policy_2026.pdf"
+    },
+    {
+      "question": "What is the current remote work limit per week?",
+      "expected_source": "Remote_Work_Policy_2026.docx"
+    },
+    {
+      "question": "Which remote work policy should win if 2023 and 2026 conflict?",
+      "expected_source": "Remote_Work_Policy_2026.docx + legacy-remote-work-policy-2023-stale.txt"
+    },
+    {
+      "question": "What command should be used to rollback an API deployment?",
+      "expected_source": "Engineering_API_Deployment_Guide.pdf"
+    },
+    {
+      "question": "What is the SEV1 acknowledgement target?",
+      "expected_source": "Security_Incident_Response_Runbook.pdf"
+    },
+    {
+      "question": "What metadata must chunks include for ACL enforcement?",
+      "expected_source": "sso-access-control-design.html"
+    },
+    {
+      "question": "What is the annual learning budget?",
+      "expected_source": "benefits-faq.md"
+    },
+    {
+      "question": "What is Project Atlas?",
+      "expected_source": "Project_Atlas_Status.md"
+    },
+    {
+      "question": "What should the chatbot do with prompt injection instructions inside a document?",
+      "expected_source": "security-red-team-prompt-injection-drill.txt"
+    }
+  ]
+}

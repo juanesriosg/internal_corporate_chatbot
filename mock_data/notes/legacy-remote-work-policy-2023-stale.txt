@@ -1,0 +1,22 @@
+Legacy Remote Work Policy 2023 - Stale
+======================================
+
+Document Metadata
+-----------------
+doc_id: HR-POL-REMOTE-2023
+department: HR
+sensitivity: internal
+allowed_groups: all-employees
+tenant_id: northstar
+effective_date: 2023-02-01
+owner: People Operations
+stale: true
+superseded_by: HR-POL-REMOTE-2026
+
+This policy is stale and has been superseded by Remote Work Policy 2026.
+
+Former rule:
+Employees could work remotely up to two days per week with manager approval. International remote work was not formally supported except for emergency situations.
+
+RAG behavior expectation:
+When this document conflicts with Remote Work Policy 2026, prefer the newer 2026 policy. If cited, the answer should clearly state this document is stale and superseded.

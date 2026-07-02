@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>SSO and Access-Control Design</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 920px; margin: 40px auto; line-height: 1.5; color: #202124; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f6f8; width: 220px; }
+    code { background: #f1f3f4; padding: 2px 4px; border-radius: 4px; }
+    .banner { background: #eef6ff; border-left: 5px solid #2b6cb0; padding: 12px; }
+  </style>
+</head>
+<body>
+  <h1>SSO and Access-Control Design</h1>
+  <div class='banner'>Mock internal document for RAG, ACL, citation, and parser testing.</div>
+  <h2>Document Metadata</h2>
+  <table><tr><th>doc_id</th><td>SEC-ACL-010</td></tr>
+<tr><th>department</th><td>Security</td></tr>
+<tr><th>sensitivity</th><td>confidential</td></tr>
+<tr><th>allowed_groups</th><td>security, platform, identity-team</td></tr>
+<tr><th>tenant_id</th><td>northstar</td></tr>
+<tr><th>effective_date</th><td>2026-05-20</td></tr>
+<tr><th>owner</th><td>Identity Platform</td></tr>
+<tr><th>stale</th><td>false</td></tr></table>
+  <h2>Identity Claims</h2><p>The chatbot receives OIDC claims for subject, email, tenant_id, department, groups, and manager_id. The backend must verify token issuer, audience, expiration, and signature before using claims.</p><h2>ACL Enforcement</h2><p>Document chunks must include allowed_groups, tenant_id, sensitivity, and source_acl_hash. Retrieval must apply metadata filters before prompt construction. The LLM must never receive unauthorized chunks.</p><h2>Cache Safety</h2><p>Answer caches must include tenant_id, user group hash, query hash, and document ACL hash. Shared caches without ACL-aware keys are prohibited.</p><h2>Audit Events</h2><p>The backend records query_id, user_id hash, retrieved chunk IDs, answer ID, model ID, and access-filter decisions. Raw user questions are retained for 30 days in the pilot.</p>
+</body>
+</html>

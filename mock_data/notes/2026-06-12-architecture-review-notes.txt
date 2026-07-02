@@ -1,0 +1,26 @@
+Architecture Review Notes - Knowledge Assistant
+===============================================
+
+Document Metadata
+-----------------
+doc_id: NOTE-ARCH-20260612
+department: Engineering
+sensitivity: internal
+allowed_groups: engineering, product, security
+tenant_id: northstar
+meeting_date: 2026-06-12
+owner: Architecture Guild
+stale: false
+
+Attendees: Platform, Security, Product, Support.
+
+Decisions:
+- Use metadata filtering before prompt construction for access control.
+- Start with pgvector or Chroma for local prototype, then evaluate OpenSearch Serverless for production hybrid retrieval.
+- Keep orchestration explicit in application code rather than hiding the whole flow inside a framework.
+- Add citations to every answer and refuse when there is no authorized source.
+
+Open questions:
+- Should Legal and Finance use separate vector indexes or strict metadata filters in a shared index?
+- How often should ACLs be resynced from source systems?
+- Which department owns answer-quality review after launch?

@@ -1,0 +1,23 @@
+HR Policy Change Draft Notes
+============================
+
+Document Metadata
+-----------------
+doc_id: NOTE-HR-DRAFT-20260618
+department: HR
+sensitivity: internal
+allowed_groups: hr, people-managers
+tenant_id: northstar
+meeting_date: 2026-06-18
+owner: People Operations
+stale: false
+
+Draft notes from HR working session. These notes are not the authoritative policy.
+
+Potential changes under discussion:
+- Increase wellness benefit from USD 50 to USD 65 per month in 2027.
+- Consider allowing PTO carryover up to eight days for employees in countries with high holiday density.
+- Clarify that international remote work approvals must be requested before travel.
+
+RAG behavior expectation:
+If a user asks for current policy, prefer official policy documents over this draft. This note can be cited only as a draft discussion if the user explicitly asks about planned changes.
