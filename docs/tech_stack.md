@@ -14,6 +14,10 @@ The main design choice is to keep the RAG system behind small interfaces:
 That makes both direct OpenAI API and Azure OpenAI Service viable without
 changing chunking, retrieval, access control, or evaluation logic.
 
+Dependency management is handled through the root `pyproject.toml`. A reviewer
+should be able to run `python -m pip install -e ".[dev]"` from a fresh virtual
+environment instead of maintaining a separate `requirements.txt`.
+
 ## Summary
 
 | Layer | Local Prototype | Production MVP | Alternatives Considered |
@@ -42,6 +46,17 @@ For the prototype, I would first implement a deterministic grounded answer
 composer so the reviewer can run the demo without any API key. Then I would add
 a provider adapter that can call either direct OpenAI or Azure OpenAI from
 environment variables.
+
+Local configuration:
+
+- `.env.example` is committed with placeholder values only.
+- `.env` is ignored by Git and is where a developer puts a real OpenAI or Azure
+  OpenAI key.
+- `LLM_PROVIDER=local` should run the no-key deterministic composer.
+- `LLM_PROVIDER=openai` should use `OPENAI_API_KEY`, `OPENAI_CHAT_MODEL`, and
+  `OPENAI_EMBEDDING_MODEL`.
+- `LLM_PROVIDER=azure_openai` should use `AZURE_OPENAI_API_KEY`,
+  `AZURE_OPENAI_ENDPOINT`, deployment names, and API version.
 
 Why not local Llama for the take-home:
 

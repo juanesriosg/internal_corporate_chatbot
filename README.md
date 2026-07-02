@@ -13,6 +13,7 @@ The repository currently contains the architecture, tech stack rationale, cost m
 | Architecture overview | Drafted | [docs/architecture.md](docs/architecture.md) |
 | Azure/model provider alignment | Drafted | [docs/architecture.md](docs/architecture.md#cloud-and-model-provider-alignment) |
 | Tech stack rationale | Drafted | [docs/tech_stack.md](docs/tech_stack.md) |
+| Local run playbook | Drafted | [docs/run_playbook.md](docs/run_playbook.md) |
 | Local mock corpus | Ready | [mock_data/README.md](mock_data/README.md) and [mock_data/manifest.json](mock_data/manifest.json) |
 | Cost estimate | Drafted | [docs/costs.md](docs/costs.md) |
 | Working prototype | Not started | `app/` and `tests/` to be added; `.local/` generated at runtime |
@@ -31,6 +32,7 @@ The repository currently contains the architecture, tech stack rationale, cost m
 | Multi-tenancy or department isolation | [Architecture: Authorization And Isolation](docs/architecture.md#authorization-and-isolation) |
 | Azure production mapping | [Architecture: Cloud And Model Provider Alignment](docs/architecture.md#cloud-and-model-provider-alignment) |
 | Tech stack selection | [docs/tech_stack.md](docs/tech_stack.md) |
+| Local run instructions | [docs/run_playbook.md](docs/run_playbook.md) |
 | Implementation approach | [Architecture: Prototype Acceptance Criteria](docs/architecture.md#prototype-acceptance-criteria) |
 | Evaluation approach | [Architecture: Evaluation Plan](docs/architecture.md#evaluation-plan) |
 | Four-week versus three-month plan | [Architecture: Roadmap](docs/architecture.md#roadmap) |
@@ -123,10 +125,20 @@ Planned local run contract once code is added:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+cp .env.example .env
+# Edit .env locally and set OPENAI_API_KEY. Do not commit .env.
 python -m app.backend.rag.ingest --source mock_data --out .local
 uvicorn app.backend.main:app --reload
 ```
+
+The repository includes [.env.example](.env.example) so reviewers know which
+configuration values are needed. Real secrets belong only in `.env`, which is
+ignored by Git.
+
+See [docs/run_playbook.md](docs/run_playbook.md) for the full local setup and
+operation playbook.
 
 ## Security Posture
 
