@@ -214,7 +214,100 @@ Expected behavior:
 - No disclosure that a restricted finance document exists unless the user is
   authorized.
 
-## 8. Run Evaluation
+## 8. Example Questions
+
+Use these examples after ingestion and API startup. They exercise normal
+retrieval, citations, stale-document handling, prompt-injection handling, and
+ACL refusals.
+
+Public HR questions as `all_employee`:
+
+```bash
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"all_employee","question":"How many PTO days do full-time employees receive?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"all_employee","question":"What is the current remote work limit per week?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"all_employee","question":"Which remote work policy should win if 2023 and 2026 conflict?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"all_employee","question":"What is the annual learning budget?"}'
+```
+
+Engineering questions as `eng_user`:
+
+```bash
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"eng_user","question":"What command should be used to rollback an API deployment?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"eng_user","question":"Which services are listed in the platform service catalog?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"eng_user","question":"What is Project Atlas?"}'
+```
+
+Security questions as `security_user`:
+
+```bash
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"security_user","question":"What is the SEV1 acknowledgement target?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"security_user","question":"What metadata must chunks include for ACL enforcement?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"security_user","question":"What should the chatbot do with prompt injection instructions inside a document?"}'
+```
+
+Finance questions as `finance_user`:
+
+```bash
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"finance_user","question":"What are the finance quarter close action items?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"finance_user","question":"What is covered by the travel reimbursement policy?"}'
+```
+
+ACL refusal checks:
+
+```bash
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"eng_user","question":"What are the finance quarter close action items?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"all_employee","question":"What is the SEV1 acknowledgement target?"}'
+
+curl -s http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"finance_user","question":"What does the legal contract review playbook require?"}'
+```
+
+Expected behavior:
+
+- Authorized questions return `refusal: false` and cite the relevant source.
+- Restricted questions from unauthorized users return a neutral refusal.
+- Prompt-injection content is described as untrusted document text, not followed
+  as an instruction.
+
+## 9. Run Evaluation
 
 Command:
 
@@ -230,7 +323,7 @@ Expected output:
 - Refusal correctness.
 - `.local/eval_results.json`.
 
-## 9. Run Tests
+## 10. Run Tests
 
 ```bash
 python -m pytest
@@ -245,7 +338,7 @@ Expected test coverage:
 - Prompt-injection note is treated as untrusted document content.
 - Stale remote-work policy loses to the 2026 policy when the two conflict.
 
-## 10. Useful Maintenance Commands
+## 11. Useful Maintenance Commands
 
 Rebuild local artifacts:
 
@@ -287,6 +380,14 @@ If OpenAI requests fail:
 - Confirm `OPENAI_API_KEY` is set only in `.env`.
 - Confirm `LLM_PROVIDER=openai`.
 - Confirm the selected model name is available to the key.
+
+If Chroma reports an embedding dimension mismatch:
+
+- Rebuild the index after changing `LLM_PROVIDER` or `OPENAI_EMBEDDING_MODEL`.
+- Local smoke-test embeddings use 384 dimensions.
+- OpenAI `text-embedding-3-small` embeddings use 1536 dimensions.
+- Run `python -m app.backend.rag.ingest --source mock_data --out .local` with
+  the same provider settings you will use for chat/eval.
 
 If retrieval returns restricted documents:
 
