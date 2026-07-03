@@ -12,14 +12,14 @@ access control, grounded answers, and evaluation.
 
 | Area | Status | Location |
 | --- | --- | --- |
-| Architecture overview | Drafted | [docs/architecture.md](docs/architecture.md) |
-| Azure/model provider alignment | Drafted | [docs/architecture.md](docs/architecture.md#cloud-and-model-provider-alignment) |
-| Tech stack rationale | Drafted | [docs/tech_stack.md](docs/tech_stack.md) |
-| Local run playbook | Drafted | [docs/run_playbook.md](docs/run_playbook.md) |
+| Architecture overview | Ready | [docs/architecture.md](docs/architecture.md) |
+| Azure/model provider alignment | Ready | [docs/architecture.md](docs/architecture.md#cloud-and-model-provider-alignment) |
+| Tech stack rationale | Ready | [docs/tech_stack.md](docs/tech_stack.md) |
+| Local run playbook | Ready | [docs/run_playbook.md](docs/run_playbook.md) |
 | Local mock corpus | Ready | [mock_data/README.md](mock_data/README.md) and [mock_data/manifest.json](mock_data/manifest.json) |
-| Cost estimate | Drafted | [docs/costs.md](docs/costs.md) |
+| Cost estimate | Ready | [docs/costs.md](docs/costs.md) |
 | Working prototype | Implemented | `app/`, `tests/`, and `.local/` generated at runtime |
-| Architecture diagram | Drafted as Mermaid | [docs/architecture.md](docs/architecture.md#end-to-end-flow) |
+| Architecture diagram | Ready as Mermaid | [docs/architecture.md](docs/architecture.md#end-to-end-flow) |
 
 ## Assignment Map
 
@@ -62,8 +62,7 @@ Local-only requirements:
 - Read document metadata, ACL rules, stale flags, and sample questions from [mock_data/manifest.json](mock_data/manifest.json).
 - Parse local files from `mock_data` across markdown, text notes, HTML, PDF, and DOCX formats.
 - Generate chunks locally.
-- Generate embeddings with OpenAI by default, or with the local deterministic
-  provider for no-key smoke tests.
+- Generate embeddings with OpenAI by default, or with the local deterministic provider for no-key smoke tests.
 - Store the vector index locally in Chroma.
 - Run retrieval, ACL filtering, prompt construction, and evaluation locally.
 - Avoid requiring Azure, AWS, Docker, or a hosted vector database for the basic demo path.
@@ -145,12 +144,9 @@ python -m app.backend.rag.ingest --source mock_data --out .local
 uvicorn app.backend.main:app --reload
 ```
 
-The repository includes [.env.example](.env.example) so reviewers know which
-configuration values are needed. Real secrets belong only in `.env`, which is
-ignored by Git.
+The repository includes [.env.example](.env.example) so reviewers know which configuration values are needed. Real secrets belong only in `.env`, which is ignored by Git.
 
-See [docs/run_playbook.md](docs/run_playbook.md) for the full local setup and
-operation playbook.
+See [docs/run_playbook.md](docs/run_playbook.md) for the full local setup and operation playbook.
 
 ## Security Posture
 
@@ -166,16 +162,6 @@ I could not find enough authorized information to answer that.
 
 It should not reveal that a restricted document exists.
 
-## Evaluation Targets
-
-The prototype should report:
-
-- Retrieval recall at 5.
-- Citation correctness.
-- Refusal correctness for out-of-scope questions.
-- Unauthorized retrieval rate, with a target of 0.
-- Basic latency for ingestion, retrieval, and generation.
-
 ## Known Tradeoffs
 
 - The prototype should optimize for inspectability over production scale.
@@ -183,11 +169,11 @@ The prototype should report:
 - A custom orchestration layer is preferred over hiding the core flow inside LangChain or LlamaIndex. Those frameworks can still be useful for loaders or utilities.
 - Exact model and embedding choices should remain configurable. The cost model should verify current pricing before final submission.
 
-## Next Work
+## Remaining Work
 
-1. Review [docs/costs.md](docs/costs.md) assumptions after the final model and
-   provider choice is confirmed.
-2. Add a small web UI or keep Swagger/API-only as the submitted interface.
-3. Run a live OpenAI smoke test after setting a private `OPENAI_API_KEY`.
-4. Add more evaluation fixtures for hallucination/refusal behavior.
-5. Add example questions and expected behavior to this README.
+1. Decide whether Swagger/API-only is enough for submission or add a small web
+   UI.
+2. Run a live OpenAI smoke test with a private `OPENAI_API_KEY`.
+3. Add dedicated regression fixtures for ambiguous and out-of-scope questions.
+4. Add structured runtime telemetry for latency, token usage, and retrieval
+   decisions.

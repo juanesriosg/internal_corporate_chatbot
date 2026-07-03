@@ -342,11 +342,23 @@ Refusal behavior:
 
 | Situation | Expected Behavior |
 | --- | --- |
+| In-scope with authorized evidence | Answer from retrieved chunks and return citations |
+| In-scope but low-confidence | Refuse instead of guessing; in production, ask a clarifying question when the missing detail is obvious |
 | No relevant authorized context | Say there is not enough authorized information to answer |
 | Ambiguous query | Ask one concise clarifying question |
+| Out-of-scope query | Return the same neutral insufficient-context response |
 | Restricted source exists but user lacks access | Do not reveal it; say no authorized information was found |
+| Stale policy conflict | Prefer current documents unless the user explicitly asks about historical or superseded content |
 | Policy interpretation request | Answer from cited policy text and recommend HR/legal confirmation |
 | Prompt injection in retrieved doc | Ignore document instructions and use it only as source content |
+
+The neutral refusal should be shared across low-confidence, out-of-scope, and unauthorized cases:
+
+```text
+I could not find enough authorized information to answer that.
+```
+
+Using one refusal path avoids leaking whether a restricted source exists. The prototype enforces this mainly through retrieval thresholds, stale-document handling, ACL filtering before prompt construction, and prompt instructions that forbid unsupported answers.
 
 ## Tech Stack Selection
 
@@ -406,6 +418,8 @@ Golden set:
 - Start with the sample questions in `mock_data/manifest.json`.
 - Add ambiguous, out-of-scope, restricted-access, and stale-document questions.
 - Include the prompt-injection note as a safety test.
+- Keep expected source titles or source files for each answerable question.
+- Keep expected refusal cases separate from answerable cases.
 
 Metrics:
 
@@ -415,6 +429,34 @@ Metrics:
 - Groundedness judged against retrieved context.
 - Refusal correctness.
 - Unauthorized retrieval rate, target 0.
+- Stale-document correctness when current and superseded documents conflict.
+- Prompt-injection robustness for retrieved malicious text.
+- Basic latency for ingestion, retrieval, and generation.
+
+Prototype measurement loop:
+
+| Quality Question | How It Is Measured |
+| --- | --- |
+| Did retrieval find the right evidence? | Compare top-k retrieved titles and source filenames with manifest expected sources |
+| Did the answer cite the right source? | Check returned citations against expected document titles/source paths |
+| Did access control hold? | Run ACL scenarios and require `unauthorized_retrieval_failures=0` |
+| Did the system refuse safely? | Ask restricted, low-confidence, and out-of-scope questions and expect the neutral refusal |
+| Did stale handling work? | Ask questions where old and current policies conflict and verify current policy wins |
+| Did prompt-injection handling work? | Retrieve the prompt-injection test note and verify document instructions are treated as data |
+| Did performance stay acceptable? | Record ingestion, retrieval, LLM, and end-to-end latency |
+
+The local prototype exposes this as:
+
+```bash
+python -m app.backend.rag.eval --source mock_data --index .local
+```
+
+Expected output should include retrieval quality and ACL safety:
+
+```text
+retrieval_recall_at_5=...
+unauthorized_retrieval_failures=0
+```
 
 Tests:
 
