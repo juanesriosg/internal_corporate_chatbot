@@ -1,4 +1,4 @@
-# Northstar Digital Mock Corporate Knowledge Base
+# Digital Mock Corporate Knowledge Base
 
 This zip contains 20 mock internal documents for testing an internal corporate RAG chatbot.
 

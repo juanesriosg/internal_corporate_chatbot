@@ -6,7 +6,9 @@ The proposed system is a retrieval-augmented generation (RAG) application. It re
 
 ## Current Status
 
-The repository currently contains the architecture, tech stack rationale, cost model, submission entry point, and the local mock corpus that will feed ingestion, chunking, embeddings, retrieval, and access-control tests. The prototype code is the next workstream.
+The repository contains the architecture, tech stack rationale, cost model, local
+mock corpus, and a local-first prototype for ingestion, Chroma retrieval,
+access control, grounded answers, and evaluation.
 
 | Area | Status | Location |
 | --- | --- | --- |
@@ -16,7 +18,7 @@ The repository currently contains the architecture, tech stack rationale, cost m
 | Local run playbook | Drafted | [docs/run_playbook.md](docs/run_playbook.md) |
 | Local mock corpus | Ready | [mock_data/README.md](mock_data/README.md) and [mock_data/manifest.json](mock_data/manifest.json) |
 | Cost estimate | Drafted | [docs/costs.md](docs/costs.md) |
-| Working prototype | Not started | `app/` and `tests/` to be added; `.local/` generated at runtime |
+| Working prototype | Implemented | `app/`, `tests/`, and `.local/` generated at runtime |
 | Architecture diagram | Drafted as Mermaid | [docs/architecture.md](docs/architecture.md#end-to-end-flow) |
 
 ## Assignment Map
@@ -60,8 +62,9 @@ Local-only requirements:
 - Read document metadata, ACL rules, stale flags, and sample questions from [mock_data/manifest.json](mock_data/manifest.json).
 - Parse local files from `mock_data` across markdown, text notes, HTML, PDF, and DOCX formats.
 - Generate chunks locally.
-- Generate embeddings locally.
-- Store the vector index locally.
+- Generate embeddings with OpenAI by default, or with the local deterministic
+  provider for no-key smoke tests.
+- Store the vector index locally in Chroma.
 - Run retrieval, ACL filtering, prompt construction, and evaluation locally.
 - Avoid requiring Azure, AWS, Docker, or a hosted vector database for the basic demo path.
 
@@ -70,6 +73,7 @@ Suggested generated local artifacts:
 ```text
 .local/
   chunks.jsonl
+  ingest_summary.json
   vector_index/
   eval_results.json
 ```
@@ -80,29 +84,37 @@ These files should be reproducible from `mock_data` and should not be treated as
 
 The prototype should prove the critical RAG loop without requiring production infrastructure.
 
-Planned local scope:
+Implemented local scope:
 
 - The `mock_data` corpus as the source of truth.
 - Local ingestion and chunking.
-- Local embeddings and vector retrieval.
+- Direct OpenAI embeddings and chat generation from `.env`.
+- Optional local deterministic embeddings and answer generation for no-key smoke tests.
 - Mock user identities and group claims.
 - Chat API that returns grounded answers with citations.
 - Tests for chunking, retrieval, and access control.
 - The sample questions and ACL tests defined in `mock_data/manifest.json`.
 
-Planned repo shape:
+Implemented repo shape:
 
 ```text
 app/
   backend/
+    config.py
     main.py
     rag/
+      auth.py
+      embeddings.py
+      eval.py
+      generator.py
       ingest.py
       chunking.py
+      manifest.py
+      models.py
+      parsers.py
       retriever.py
-      generator.py
-      auth.py
-      eval.py
+      storage.py
+      vector_store.py
 mock_data/
   manifest.json
   markdown/
@@ -111,16 +123,16 @@ mock_data/
   pdf/
   word/
 tests/
-  test_chunking.py
-  test_retrieval.py
-  test_access_control.py
+    test_api.py
+    test_ingestion.py
+    test_retrieval_acl.py
 docs/
   architecture.md
   tech_stack.md
   costs.md
 ```
 
-Planned local run contract once code is added:
+Local run contract:
 
 ```bash
 python -m venv .venv
@@ -128,7 +140,7 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 cp .env.example .env
-# Edit .env locally and set OPENAI_API_KEY. Do not commit .env.
+# Edit .env locally and set OpenAI values. Do not commit .env.
 python -m app.backend.rag.ingest --source mock_data --out .local
 uvicorn app.backend.main:app --reload
 ```
@@ -175,7 +187,7 @@ The prototype should report:
 
 1. Review [docs/costs.md](docs/costs.md) assumptions after the final model and
    provider choice is confirmed.
-2. Add mock users based on the ACL scenarios in `mock_data/manifest.json`.
-3. Implement local ingestion, retrieval, prompt construction, and citations.
-4. Add access-control and retrieval tests.
+2. Add a small web UI or keep Swagger/API-only as the submitted interface.
+3. Run a live OpenAI smoke test after setting a private `OPENAI_API_KEY`.
+4. Add more evaluation fixtures for hallucination/refusal behavior.
 5. Add example questions and expected behavior to this README.

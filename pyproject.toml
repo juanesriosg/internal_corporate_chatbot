@@ -7,7 +7,7 @@ name = "internal-corporate-chatbot"
 version = "0.1.0"
 description = "Local-first RAG prototype for an internal corporate chatbot take-home assignment."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 license = { text = "UNLICENSED" }
 authors = [
   { name = "Juan Esteban" }
@@ -44,7 +44,11 @@ include = ["app*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "-q"
+addopts = "-q -s"
+filterwarnings = [
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated.*:starlette.exceptions.StarletteDeprecationWarning",
+  "ignore:Accessing the 'model_fields' attribute on the instance is deprecated.*:pydantic.warnings.PydanticDeprecatedSince211"
+]
 
 [tool.ruff]
 line-length = 100

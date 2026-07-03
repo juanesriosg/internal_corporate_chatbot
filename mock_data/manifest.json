@@ -1,5 +1,5 @@
 {
-  "corpus_name": "Northstar Digital Mock Corporate Knowledge Base",
+  "corpus_name": "Digital Mock Corporate Knowledge Base",
   "created_at": "2026-07-02",
   "purpose": "Mock corpus for testing an internal corporate RAG chatbot across multiple formats, departments, sensitivities, stale docs, and ACL rules.",
   "document_count": 20,

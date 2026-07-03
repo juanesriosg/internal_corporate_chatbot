@@ -22,9 +22,9 @@ environment instead of maintaining a separate `requirements.txt`.
 
 | Layer | Local Prototype | Production MVP | Alternatives Considered |
 | --- | --- | --- | --- |
-| LLM provider | Deterministic grounded answer composer first; optional direct OpenAI or Azure OpenAI adapter | Direct OpenAI API or Azure OpenAI Service | Local Llama, Anthropic, Bedrock |
+| LLM provider | Direct OpenAI API by default; deterministic local composer for no-key smoke tests; Azure OpenAI adapter available | Direct OpenAI API or Azure OpenAI Service | Local Llama, Anthropic, Bedrock |
 | LLM model | Small/medium OpenAI chat model if API use is enabled | Cost-efficient default model plus stronger escalation model | One large model for every query |
-| Embeddings | `text-embedding-3-small` when API use is enabled; deterministic local vectorizer for no-key demo | `text-embedding-3-small`, upgrade to `text-embedding-3-large` if retrieval quality needs it | BGE/e5 local embeddings, Azure AI Search integrated vectorization |
+| Embeddings | `text-embedding-3-small` by default; deterministic local vectorizer for no-key smoke tests | `text-embedding-3-small`, upgrade to `text-embedding-3-large` if retrieval quality needs it | BGE/e5 local embeddings, Azure AI Search integrated vectorization |
 | Vector DB | Chroma persisted under `.local/` | Azure AI Search for hybrid search, or Postgres/pgvector if existing infra prefers it | scikit-learn, FAISS, sqlite-vec, Pinecone, Weaviate |
 | Orchestration | Custom Python modules | Same custom modules with provider adapters | LangChain, LlamaIndex |
 | Parsing | `pypdf`, `python-docx`, `beautifulsoup4`, markdown/plain text parser | Azure AI Document Intelligence or Unstructured for harder files | Custom-only parsing, OCR-only approach |
@@ -52,9 +52,10 @@ Local configuration:
 - `.env.example` is committed with placeholder values only.
 - `.env` is ignored by Git and is where a developer puts a real OpenAI or Azure
   OpenAI key.
-- `LLM_PROVIDER=local` should run the no-key deterministic composer.
-- `LLM_PROVIDER=openai` should use `OPENAI_API_KEY`, `OPENAI_CHAT_MODEL`, and
+- `LLM_PROVIDER=openai` is the default functional path and should use
+  `OPENAI_API_KEY`, `OPENAI_CHAT_MODEL`, and
   `OPENAI_EMBEDDING_MODEL`.
+- `LLM_PROVIDER=local` should run the no-key deterministic composer.
 - `LLM_PROVIDER=azure_openai` should use `AZURE_OPENAI_API_KEY`,
   `AZURE_OPENAI_ENDPOINT`, deployment names, and API version.
 

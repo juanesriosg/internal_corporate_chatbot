@@ -86,7 +86,7 @@ LLM provider decision:
 | Direct OpenAI API | Simplest model access, fastest iteration, clear token pricing, easiest to use in a local prototype when an API key is allowed | Separate vendor relationship from Azure and may need additional enterprise security review |
 | Azure OpenAI Service | Fits an Azure-first enterprise environment, can align with Azure networking, identity, billing, and governance | Model availability, deployment setup, and pricing may differ by region and Azure subscription |
 
-The implementation should hide this choice behind a small `ModelProvider` and `EmbeddingProvider` interface. The prototype can run with a deterministic local answer composer first, then use direct OpenAI or Azure OpenAI by changing configuration instead of rewriting retrieval, authorization, or prompt construction.
+The implementation should hide this choice behind a small `ModelProvider` and `EmbeddingProvider` interface. The prototype defaults to direct OpenAI for functional runs, while the deterministic local answer composer remains available for no-key smoke tests by changing configuration instead of rewriting retrieval, authorization, or prompt construction.
 
 ## End-To-End Flow
 
@@ -214,7 +214,7 @@ Suggested chunk metadata:
   "chunk_id": "hr-pto-policy#003",
   "title": "Paid Time Off Policy",
   "source_uri": "mock_data/pdf/hr/HR_PTO_Policy_2026.pdf",
-  "tenant_id": "northstar",
+  "tenant_id": "default",
   "department": "hr",
   "allowed_groups": ["all-employees"],
   "sensitivity": "internal",
@@ -360,7 +360,7 @@ The detailed stack rationale lives in [docs/tech_stack.md](tech_stack.md). Summa
 | Document parsing | `pypdf`, `python-docx`, `beautifulsoup4`, markdown/plain text parser | Azure AI Document Intelligence, Unstructured, or source-specific parsers | The prototype should ingest the real local mock corpus |
 | Embeddings | `text-embedding-3-small` through direct OpenAI or Azure OpenAI when API use is enabled; local deterministic vectorizer for no-key demo | `text-embedding-3-small`, upgrade to `text-embedding-3-large` if retrieval quality requires it | Small embedding model is cost-effective; larger embedding model is a quality lever |
 | Vector store | Chroma persisted under `.local/` | Azure AI Search with vector and hybrid search, or Postgres/pgvector if already available | Chroma gives the prototype real local vector DB behavior; production needs hybrid search and ops support |
-| LLM | Deterministic grounded answer composer first; direct OpenAI or Azure OpenAI adapter second | Direct OpenAI API or Azure OpenAI Service | Both are valid; provider adapter avoids lock-in |
+| LLM | Direct OpenAI adapter by default; deterministic grounded answer composer for no-key smoke tests; Azure OpenAI adapter available | Direct OpenAI API or Azure OpenAI Service | Both are valid; provider adapter avoids lock-in |
 | Metadata | JSON files or SQLite | Azure SQL, Azure Database for PostgreSQL, or Cosmos DB | Needed for source metadata, ingestion state, and audit records |
 | Observability | Structured logs and eval JSON | Azure Monitor, Application Insights, OpenTelemetry, and LLM observability tooling | Track latency, retrieval quality, token use, refusals, and feedback |
 | Infrastructure | Local first | Terraform or Bicep with GitHub Actions or Azure DevOps | Cloud resources should be reproducible when productionized |
