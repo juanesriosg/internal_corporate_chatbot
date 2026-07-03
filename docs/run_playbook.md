@@ -179,17 +179,18 @@ http://127.0.0.1:5173
 ```
 
 The UI talks to the API URL shown in the form. For local smoke tests,
-`API_AUTH_ENABLED=false` is enough. For a deployed API, set:
+`API_AUTH_ENABLED=false` is enough. If you want to test the API auth path
+locally, set:
 
 ```text
 API_AUTH_ENABLED=true
 API_BASIC_USERNAME=<reviewer-username>
 API_BASIC_PASSWORD=<strong-password>
-CORS_ALLOWED_ORIGINS=https://<github-user-or-org>.github.io
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
-The OpenAI key must stay in the API environment. Do not put it in `web/` or in
-GitHub Pages configuration.
+The OpenAI key must stay in `.env` for the API process. Do not put it in
+`web/`.
 
 ## 7. Ask A Question
 
@@ -385,22 +386,6 @@ Type-check:
 ```bash
 python -m mypy app
 ```
-
-## 13. CI/CD And Deployment
-
-CI/CD files:
-
-```text
-.github/workflows/ci.yml
-.github/workflows/pages.yml
-.github/workflows/api-container.yml
-```
-
-Deployment details are in [docs/deployment.md](deployment.md).
-
-Important constraint: GitHub Pages hosts only the static UI. The FastAPI API
-must run on a backend host such as Azure Container Apps, because it owns the
-OpenAI key and the server-side Basic Auth check.
 
 ## Troubleshooting
 

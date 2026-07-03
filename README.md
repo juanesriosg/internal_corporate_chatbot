@@ -16,12 +16,10 @@ access control, grounded answers, and evaluation.
 | Azure/model provider alignment | Ready | [docs/architecture.md](docs/architecture.md#cloud-and-model-provider-alignment) |
 | Tech stack rationale | Ready | [docs/tech_stack.md](docs/tech_stack.md) |
 | Local run playbook | Ready | [docs/run_playbook.md](docs/run_playbook.md) |
-| Deployment guide | Ready | [docs/deployment.md](docs/deployment.md) |
 | Local mock corpus | Ready | [mock_data/README.md](mock_data/README.md) and [mock_data/manifest.json](mock_data/manifest.json) |
 | Cost estimate | Ready | [docs/costs.md](docs/costs.md) |
 | Working prototype | Implemented | `app/`, `tests/`, and `.local/` generated at runtime |
-| Static web UI | Implemented | [web/](web/) |
-| CI/CD workflows | Implemented | [.github/workflows](.github/workflows) |
+| Local web UI | Implemented | [web/](web/) |
 | Architecture diagram | Ready as Mermaid | [docs/architecture.md](docs/architecture.md#end-to-end-flow) |
 
 ## Assignment Map
@@ -117,16 +115,10 @@ app/
       retriever.py
       storage.py
       vector_store.py
-.github/
-  workflows/
-    ci.yml
-    pages.yml
-    api-container.yml
 web/
   index.html
   app.js
   styles.css
-Dockerfile
 mock_data/
   manifest.json
   markdown/
@@ -142,7 +134,6 @@ docs/
   architecture.md
   tech_stack.md
   costs.md
-  deployment.md
 ```
 
 Local run contract:
@@ -186,7 +177,6 @@ It should not reveal that a restricted document exists.
 ## Remaining Work
 
 1. Run a live OpenAI smoke test with a private `OPENAI_API_KEY`.
-2. Configure GitHub repository secrets and variables for a real hosted API.
-3. Add dedicated regression fixtures for ambiguous and out-of-scope questions.
-4. Add structured runtime telemetry for latency, token usage, and retrieval
+2. Add dedicated regression fixtures for ambiguous and out-of-scope questions.
+3. Add structured runtime telemetry for latency, token usage, and retrieval
    decisions.
