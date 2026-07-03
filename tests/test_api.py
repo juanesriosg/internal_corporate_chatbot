@@ -47,3 +47,32 @@ def test_chat_does_not_leak_unauthorized_finance_doc(api_client: TestClient) -> 
     assert "Finance Travel Reimbursement Policy - Confidential" not in {
         citation["title"] for citation in payload["citations"]
     }
+
+
+def test_chat_requires_basic_auth_when_enabled(
+    api_client: TestClient,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("API_AUTH_ENABLED", "true")
+    monkeypatch.setenv("API_BASIC_USERNAME", "reviewer")
+    monkeypatch.setenv("API_BASIC_PASSWORD", "local-password")
+
+    unauthenticated = api_client.post(
+        "/chat",
+        json={
+            "user_id": "all_employee",
+            "question": "How many PTO days do full-time employees receive?",
+        },
+    )
+    assert unauthenticated.status_code == 401
+
+    authenticated = api_client.post(
+        "/chat",
+        auth=("reviewer", "local-password"),
+        json={
+            "user_id": "all_employee",
+            "question": "How many PTO days do full-time employees receive?",
+        },
+    )
+    assert authenticated.status_code == 200
+    assert authenticated.json()["refusal"] is False

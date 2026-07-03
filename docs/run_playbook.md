@@ -164,7 +164,34 @@ Swagger:  http://127.0.0.1:8000/docs
 Health:   http://127.0.0.1:8000/health
 ```
 
-## 6. Ask A Question
+## 6. Run The Web UI
+
+In another terminal, serve the static UI:
+
+```bash
+python -m http.server 5173 --directory web
+```
+
+Open:
+
+```text
+http://127.0.0.1:5173
+```
+
+The UI talks to the API URL shown in the form. For local smoke tests,
+`API_AUTH_ENABLED=false` is enough. For a deployed API, set:
+
+```text
+API_AUTH_ENABLED=true
+API_BASIC_USERNAME=<reviewer-username>
+API_BASIC_PASSWORD=<strong-password>
+CORS_ALLOWED_ORIGINS=https://<github-user-or-org>.github.io
+```
+
+The OpenAI key must stay in the API environment. Do not put it in `web/` or in
+GitHub Pages configuration.
+
+## 7. Ask A Question
 
 Request:
 
@@ -194,7 +221,7 @@ Expected response shape:
 }
 ```
 
-## 7. Verify Access Control
+## 8. Verify Access Control
 
 Engineering user should not retrieve finance or legal restricted documents:
 
@@ -214,7 +241,7 @@ Expected behavior:
 - No disclosure that a restricted finance document exists unless the user is
   authorized.
 
-## 8. Example Questions
+## 9. Example Questions
 
 Use these examples after ingestion and API startup. They exercise normal
 retrieval, citations, stale-document handling, prompt-injection handling, and
@@ -307,7 +334,7 @@ Expected behavior:
 - Prompt-injection content is described as untrusted document text, not followed
   as an instruction.
 
-## 9. Run Evaluation
+## 10. Run Evaluation
 
 Command:
 
@@ -323,7 +350,7 @@ Expected output:
 - Refusal correctness.
 - `.local/eval_results.json`.
 
-## 10. Run Tests
+## 11. Run Tests
 
 ```bash
 python -m pytest
@@ -338,7 +365,7 @@ Expected test coverage:
 - Prompt-injection note is treated as untrusted document content.
 - Stale remote-work policy loses to the 2026 policy when the two conflict.
 
-## 11. Useful Maintenance Commands
+## 12. Useful Maintenance Commands
 
 Rebuild local artifacts:
 
@@ -358,6 +385,22 @@ Type-check:
 ```bash
 python -m mypy app
 ```
+
+## 13. CI/CD And Deployment
+
+CI/CD files:
+
+```text
+.github/workflows/ci.yml
+.github/workflows/pages.yml
+.github/workflows/api-container.yml
+```
+
+Deployment details are in [docs/deployment.md](deployment.md).
+
+Important constraint: GitHub Pages hosts only the static UI. The FastAPI API
+must run on a backend host such as Azure Container Apps, because it owns the
+OpenAI key and the server-side Basic Auth check.
 
 ## Troubleshooting
 

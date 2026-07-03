@@ -47,6 +47,19 @@ class Settings(BaseSettings):
     retrieval_top_k: int = Field(default=5, ge=1)
     retrieval_candidate_count: int = Field(default=40, ge=5)
 
+    api_auth_enabled: bool = False
+    api_basic_username: str = ""
+    api_basic_password: str = ""
+    cors_allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [
+            origin.strip()
+            for origin in self.cors_allowed_origins.split(",")
+            if origin.strip()
+        ]
+
     def require_openai_chat(self) -> None:
         if not self.openai_api_key:
             raise ValueError("OPENAI_API_KEY is required when LLM_PROVIDER=openai.")

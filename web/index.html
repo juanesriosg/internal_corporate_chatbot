@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Internal Corporate Chatbot</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./config.js"></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="chat-panel" aria-labelledby="app-title">
+        <header class="app-header">
+          <div>
+            <p class="eyebrow">RAG prototype</p>
+            <h1 id="app-title">Internal Corporate Chatbot</h1>
+          </div>
+          <div class="status-pill" id="status-pill">Ready</div>
+        </header>
+
+        <form id="chat-form" class="chat-form">
+          <div class="settings-grid">
+            <label>
+              <span>API URL</span>
+              <input
+                id="api-url"
+                name="api-url"
+                type="url"
+                placeholder="https://your-api.example.com"
+                autocomplete="url"
+                required
+              />
+            </label>
+            <label>
+              <span>User</span>
+              <select id="user-id" name="user-id">
+                <option value="all_employee">all_employee</option>
+                <option value="eng_user">eng_user</option>
+                <option value="finance_user">finance_user</option>
+                <option value="security_user">security_user</option>
+                <option value="legal_user">legal_user</option>
+                <option value="product_user">product_user</option>
+                <option value="platform_user">platform_user</option>
+                <option value="exec_user">exec_user</option>
+              </select>
+            </label>
+            <label>
+              <span>Login</span>
+              <input id="api-user" name="api-user" autocomplete="username" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input
+                id="api-password"
+                name="api-password"
+                type="password"
+                autocomplete="current-password"
+              />
+            </label>
+          </div>
+
+          <label class="question-field">
+            <span>Question</span>
+            <textarea
+              id="question"
+              name="question"
+              rows="4"
+              placeholder="Ask about PTO, remote work, deployment rollback, finance close, or security runbooks."
+              required
+            ></textarea>
+          </label>
+
+          <div class="actions-row">
+            <button type="submit" id="ask-button">Ask</button>
+            <button type="button" id="clear-button" class="secondary">Clear</button>
+          </div>
+        </form>
+
+        <section class="examples" aria-label="Example questions">
+          <button type="button" data-user="all_employee" data-question="How many PTO days do full-time employees receive?">
+            PTO policy
+          </button>
+          <button type="button" data-user="eng_user" data-question="What command should be used to rollback an API deployment?">
+            Rollback command
+          </button>
+          <button type="button" data-user="finance_user" data-question="What are the finance quarter close action items?">
+            Finance close
+          </button>
+          <button type="button" data-user="security_user" data-question="How should prompt injection inside retrieved documents be handled?">
+            Prompt injection
+          </button>
+        </section>
+
+        <section class="response-panel" aria-live="polite">
+          <h2>Answer</h2>
+          <div id="answer" class="answer empty">No answer yet.</div>
+          <div class="response-meta">
+            <div>
+              <h3>Citations</h3>
+              <ul id="citations"></ul>
+            </div>
+            <div>
+              <h3>Retrieved Chunks</h3>
+              <ul id="chunks"></ul>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
