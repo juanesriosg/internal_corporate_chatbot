@@ -3,7 +3,7 @@ doc_id: ENG-CAT-001
 department: Engineering
 sensitivity: internal
 allowed_groups: [engineering, platform, sre]
-tenant_id: northstar
+tenant_id: default
 effective_date: 2026-03-01
 owner: Platform Engineering
 stale: false

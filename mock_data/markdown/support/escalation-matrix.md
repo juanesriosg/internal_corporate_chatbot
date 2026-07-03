@@ -3,7 +3,7 @@ doc_id: SUP-ESC-004
 department: Support
 sensitivity: internal
 allowed_groups: [support, engineering, customer-success]
-tenant_id: northstar
+tenant_id: default
 effective_date: 2026-04-15
 owner: Support Operations
 stale: false

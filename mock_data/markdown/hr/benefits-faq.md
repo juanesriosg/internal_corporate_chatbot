@@ -3,7 +3,7 @@ doc_id: HR-FAQ-002
 department: HR
 sensitivity: internal
 allowed_groups: [all-employees]
-tenant_id: northstar
+tenant_id: default
 effective_date: 2026-01-20
 owner: Benefits Team
 stale: false

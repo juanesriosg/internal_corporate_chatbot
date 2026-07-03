@@ -3,7 +3,7 @@ doc_id: PROJ-ATLAS-009
 department: Product
 sensitivity: internal
 allowed_groups: [product, engineering, design, executives]
-tenant_id: northstar
+tenant_id: default
 effective_date: 2026-06-25
 owner: Product Operations
 stale: false
@@ -12,7 +12,7 @@ stale: false
 
 ## Overview
 
-Project Atlas is the internal knowledge assistant pilot for Northstar Digital. The first pilot covers HR policies, platform engineering runbooks, and product launch checklists.
+Project Atlas is the internal knowledge assistant pilot for Digital Mock. The first pilot covers HR policies, platform engineering runbooks, and product launch checklists.
 
 ## Milestones
 

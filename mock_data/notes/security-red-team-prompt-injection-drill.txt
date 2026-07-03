@@ -7,7 +7,7 @@ doc_id: NOTE-SEC-REDTEAM-20260621
 department: Security
 sensitivity: confidential
 allowed_groups: security, ai-platform
-tenant_id: northstar
+tenant_id: default
 meeting_date: 2026-06-21
 owner: AI Security
 stale: false

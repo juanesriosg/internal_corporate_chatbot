@@ -7,7 +7,7 @@ doc_id: NOTE-HR-DRAFT-20260618
 department: HR
 sensitivity: internal
 allowed_groups: hr, people-managers
-tenant_id: northstar
+tenant_id: default
 meeting_date: 2026-06-18
 owner: People Operations
 stale: false
