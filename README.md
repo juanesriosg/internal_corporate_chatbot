@@ -176,9 +176,3 @@ It should not reveal that a restricted document exists.
 - A local vector store is enough for the demo, while production may use Azure AI Search for vector and hybrid retrieval.
 - A custom orchestration layer is preferred over hiding the core flow inside LangChain or LlamaIndex. Those frameworks can still be useful for loaders or utilities.
 - Exact model and embedding choices should remain configurable. The cost model should verify current pricing before final submission.
-
-## Remaining Work
-
-1. Run a live OpenAI smoke test with a private `OPENAI_API_KEY`.
-2. Add dedicated regression fixtures for ambiguous and out-of-scope questions.
-3. Add conversation memory or streaming if those bonus items become worth the extra scope.
