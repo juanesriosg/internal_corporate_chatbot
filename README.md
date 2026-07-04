@@ -74,6 +74,7 @@ Suggested generated local artifacts:
   ingest_summary.json
   vector_index/
   eval_results.json
+  feedback.jsonl
 ```
 
 These files should be reproducible from `mock_data` and should not be treated as source documents.
@@ -92,6 +93,7 @@ Implemented local scope:
 - Chat API that returns grounded answers with citations.
 - Latency timing metadata on chat responses and eval results.
 - Local feedback capture in `.local/feedback.jsonl`.
+- Local UI tabs for chat, evaluation results, and feedback review.
 - Local fallback answer generation if the configured OpenAI provider fails.
 - Tests for chunking, retrieval, and access control.
 - The sample questions and ACL tests defined in `mock_data/manifest.json`.

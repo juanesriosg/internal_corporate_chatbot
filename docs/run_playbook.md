@@ -171,18 +171,13 @@ Open:
 http://127.0.0.1:5173
 ```
 
-The UI talks to the API URL shown in the form. For local smoke tests, `API_AUTH_ENABLED=false` is enough. If you want to test the API auth path locally, set:
-
-```text
-API_AUTH_ENABLED=true
-API_BASIC_USERNAME=<reviewer-username>
-API_BASIC_PASSWORD=<strong-password>
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-```
+The UI talks to the API URL shown in the form and assumes the API is running locally with `API_AUTH_ENABLED=false`.
 
 The OpenAI key must stay in `.env` for the API process. Do not put it in `web/`.
 
-The UI also has feedback buttons. Feedback is appended locally to:
+The UI has tabs for chat, evaluation results, and feedback. The evaluation tab reads `GET /eval-results`; the feedback tab reads `GET /feedback`.
+
+Feedback buttons append records locally to:
 
 ```text
 .local/feedback.jsonl
@@ -214,6 +209,12 @@ Expected response shape:
       "chunk_id": "..."
     }
   ],
+  "retrieved_sources": [
+    {
+      "title": "HR PTO Policy 2026",
+      "source_uri": "mock_data/pdf/hr/HR_PTO_Policy_2026.pdf"
+    }
+  ],
   "retrieved_chunk_ids": ["..."],
   "refusal": false,
   "provider": "openai",
@@ -227,6 +228,9 @@ Expected response shape:
   }
 }
 ```
+
+The UI displays citation and retrieved-source titles for readability. Raw chunk
+IDs remain in the API response only as debug metadata.
 
 If the configured OpenAI provider is unavailable, the API falls back to local keyword retrieval plus the deterministic local answer composer. In that case the response uses `fallback_used: true`, `provider: "openai->local"`, and the answer starts with a short fallback notice.
 
@@ -355,6 +359,8 @@ Expected output:
 - Refusal correctness.
 - Average retrieval latency.
 - `.local/eval_results.json`.
+
+After this command finishes, refresh the Evaluation tab in the UI to inspect the summary metrics, sample-question hits, ACL checks, and latency values.
 
 ## 11. Run Tests
 
