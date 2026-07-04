@@ -4,6 +4,11 @@ This repository is a take-home assignment for designing and prototyping an inter
 
 The proposed system is a retrieval-augmented generation (RAG) application. It retrieves relevant internal documents, filters them by the employee's access rights, builds a grounded prompt, and returns an answer with source citations.
 
+## Loom walkthrough
+
+[Loom explanation](https://www.loom.com/share/1119df1b3ec0484cb96d11506c4341ef)
+
+
 ## Current Status
 
 The repository contains the architecture, tech stack rationale, cost model, local mock corpus, and a local-first prototype for ingestion, Chroma retrieval, access control, grounded answers, latency timings, feedback capture, and evaluation.
