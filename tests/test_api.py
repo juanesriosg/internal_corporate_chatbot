@@ -34,6 +34,8 @@ def test_chat_returns_grounded_citation(api_client: TestClient) -> None:
     assert payload["fallback_used"] is False
     assert payload["timings_ms"]["total_ms"] >= 0
     assert any(citation["title"] == "HR PTO Policy 2026" for citation in payload["citations"])
+    assert any(source["title"] == "HR PTO Policy 2026" for source in payload["retrieved_sources"])
+    assert all("#" not in source["title"] for source in payload["retrieved_sources"])
 
 
 def test_chat_does_not_leak_unauthorized_finance_doc(api_client: TestClient) -> None:
@@ -139,3 +141,42 @@ def test_feedback_writes_local_jsonl(
     assert payload["rating"] == "down"
     assert payload["comment"] == "Missing detail."
     assert payload["created_at"]
+
+    list_response = api_client.get("/feedback")
+    assert list_response.status_code == 200
+    list_payload = list_response.json()
+    assert list_payload["status"] == "ready"
+    assert list_payload["count"] >= 1
+    assert list_payload["records"][0]["request_id"] == "req_test"
+
+
+def test_eval_results_reads_local_artifact(
+    api_client: TestClient,
+    ingested_settings: Settings,
+) -> None:
+    expected = {
+        "sample_questions": 1,
+        "retrieval_recall_at_5": 1.0,
+        "unauthorized_retrieval_failures": 0,
+        "latency_ms": {"avg_sample_retrieval_ms": 12.3},
+        "question_results": [
+            {
+                "question": "What is PTO?",
+                "expected_source": "HR_PTO_Policy_2026.pdf",
+                "hit": True,
+                "retrieval_ms": 12.3,
+                "retrieved_titles": ["HR PTO Policy 2026"],
+            }
+        ],
+        "acl_results": [],
+    }
+    eval_path = ingested_settings.local_artifact_dir / "eval_results.json"
+    eval_path.write_text(json.dumps(expected), encoding="utf-8")
+
+    response = api_client.get("/eval-results")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ready"
+    assert payload["artifact"].endswith("eval_results.json")
+    assert payload["results"] == expected

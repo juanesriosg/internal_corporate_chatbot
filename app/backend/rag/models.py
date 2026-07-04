@@ -6,6 +6,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+JsonDict = dict[str, Any]
+
 
 class DocumentRecord(BaseModel):
     file: str
@@ -92,11 +94,17 @@ class Citation(BaseModel):
     chunk_id: str
 
 
+class SourceReference(BaseModel):
+    title: str
+    source_uri: str
+
+
 class ChatResponse(BaseModel):
     request_id: str
     answer: str
     citations: list[Citation]
     retrieved_chunk_ids: list[str]
+    retrieved_sources: list[SourceReference] = Field(default_factory=list)
     refusal: bool
     user_id: str
     provider: str
@@ -119,11 +127,21 @@ class FeedbackResponse(BaseModel):
     request_id: str
 
 
+class EvalResultsResponse(BaseModel):
+    status: Literal["ready", "missing"]
+    artifact: str
+    results: JsonDict | None = None
+
+
+class FeedbackListResponse(BaseModel):
+    status: str
+    artifact: str
+    count: int
+    records: list[JsonDict] = Field(default_factory=list)
+
+
 class HealthResponse(BaseModel):
     status: str
     vector_backend: str
     collection_count: int | None = None
     index_present: bool
-
-
-JsonDict = dict[str, Any]

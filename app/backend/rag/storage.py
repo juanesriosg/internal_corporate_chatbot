@@ -8,6 +8,7 @@ from app.backend.rag.models import Chunk
 
 CHUNKS_FILENAME = "chunks.jsonl"
 FEEDBACK_FILENAME = "feedback.jsonl"
+EVAL_RESULTS_FILENAME = "eval_results.json"
 
 
 def chunks_path(artifact_dir: Path) -> Path:
@@ -40,6 +41,10 @@ def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def load_json(path: Path) -> object:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def append_jsonl(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
@@ -47,5 +52,21 @@ def append_jsonl(path: Path, payload: object) -> None:
         handle.write("\n")
 
 
+def load_jsonl(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+
+    records = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                records.append(json.loads(line))
+    return records
+
+
 def feedback_path(artifact_dir: Path) -> Path:
     return artifact_dir / FEEDBACK_FILENAME
+
+
+def eval_results_path(artifact_dir: Path) -> Path:
+    return artifact_dir / EVAL_RESULTS_FILENAME

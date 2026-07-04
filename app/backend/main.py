@@ -6,7 +6,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
@@ -23,13 +23,23 @@ from app.backend.rag.models import (
     ChatRequest,
     ChatResponse,
     Chunk,
+    EvalResultsResponse,
+    FeedbackListResponse,
     FeedbackRequest,
     FeedbackResponse,
     HealthResponse,
     RetrievedChunk,
+    SourceReference,
 )
 from app.backend.rag.retriever import Retriever, retrieve_keyword_fallback
-from app.backend.rag.storage import append_jsonl, feedback_path, load_chunks
+from app.backend.rag.storage import (
+    append_jsonl,
+    eval_results_path,
+    feedback_path,
+    load_chunks,
+    load_json,
+    load_jsonl,
+)
 from app.backend.rag.vector_store import ChromaVectorStore, index_present
 
 app = FastAPI(title="Internal Corporate Chatbot", version="0.1.0")
@@ -163,6 +173,7 @@ def chat(
         answer=answer,
         citations=[] if refusal else citations_for(answer_context),
         retrieved_chunk_ids=[candidate.chunk.chunk_id for candidate in retrieved],
+        retrieved_sources=source_references_for(retrieved),
         refusal=refusal,
         user_id=request.user_id,
         provider=provider,
@@ -182,6 +193,55 @@ def feedback(
     payload["created_at"] = datetime.now(UTC).isoformat()
     append_jsonl(feedback_path(settings.local_artifact_dir), payload)
     return FeedbackResponse(status="ok", request_id=request.request_id)
+
+
+def source_references_for(chunks: list[RetrievedChunk]) -> list[SourceReference]:
+    seen: set[str] = set()
+    sources: list[SourceReference] = []
+    for candidate in chunks:
+        chunk = candidate.chunk
+        if chunk.source_uri in seen:
+            continue
+        seen.add(chunk.source_uri)
+        sources.append(SourceReference(title=chunk.title, source_uri=chunk.source_uri))
+    return sources
+
+
+@app.get("/eval-results", response_model=EvalResultsResponse)
+def eval_results(
+    _auth: Annotated[None, Depends(require_api_auth)],
+) -> EvalResultsResponse:
+    settings = get_settings()
+    path = eval_results_path(settings.local_artifact_dir)
+    if not path.exists():
+        return EvalResultsResponse(status="missing", artifact=str(path), results=None)
+
+    payload = load_json(path)
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=500, detail=f"Invalid eval results file: {path}")
+
+    return EvalResultsResponse(
+        status="ready",
+        artifact=str(path),
+        results=payload,
+    )
+
+
+@app.get("/feedback", response_model=FeedbackListResponse)
+def feedback_records(
+    _auth: Annotated[None, Depends(require_api_auth)],
+    limit: Annotated[int, Query(ge=1, le=500)] = 100,
+) -> FeedbackListResponse:
+    settings = get_settings()
+    path = feedback_path(settings.local_artifact_dir)
+    records = load_jsonl(path)
+    latest_records = list(reversed(records[-limit:]))
+    return FeedbackListResponse(
+        status="ready",
+        artifact=str(path),
+        count=len(records),
+        records=[record for record in latest_records if isinstance(record, dict)],
+    )
 
 
 def _local_fallback_answer(
