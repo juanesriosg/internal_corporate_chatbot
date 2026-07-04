@@ -6,9 +6,7 @@ The proposed system is a retrieval-augmented generation (RAG) application. It re
 
 ## Current Status
 
-The repository contains the architecture, tech stack rationale, cost model, local
-mock corpus, and a local-first prototype for ingestion, Chroma retrieval,
-access control, grounded answers, and evaluation.
+The repository contains the architecture, tech stack rationale, cost model, local mock corpus, and a local-first prototype for ingestion, Chroma retrieval, access control, grounded answers, latency timings, feedback capture, and evaluation.
 
 | Area | Status | Location |
 | --- | --- | --- |
@@ -92,6 +90,9 @@ Implemented local scope:
 - Optional local deterministic embeddings and answer generation for no-key smoke tests.
 - Mock user identities and group claims.
 - Chat API that returns grounded answers with citations.
+- Latency timing metadata on chat responses and eval results.
+- Local feedback capture in `.local/feedback.jsonl`.
+- Local fallback answer generation if the configured OpenAI provider fails.
 - Tests for chunking, retrieval, and access control.
 - The sample questions and ACL tests defined in `mock_data/manifest.json`.
 
@@ -178,5 +179,4 @@ It should not reveal that a restricted document exists.
 
 1. Run a live OpenAI smoke test with a private `OPENAI_API_KEY`.
 2. Add dedicated regression fixtures for ambiguous and out-of-scope questions.
-3. Add structured runtime telemetry for latency, token usage, and retrieval
-   decisions.
+3. Add conversation memory or streaming if those bonus items become worth the extra scope.

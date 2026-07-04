@@ -259,7 +259,7 @@ button.secondary:hover,
 
 .response-meta {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -281,6 +281,29 @@ ul {
 
 .muted {
   color: var(--muted);
+}
+
+.feedback-panel {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.feedback-panel textarea {
+  min-height: 68px;
+}
+
+.feedback-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feedback-actions button {
+  min-height: 36px;
 }
 
 @media (max-width: 860px) {

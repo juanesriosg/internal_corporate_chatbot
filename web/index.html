@@ -104,6 +104,27 @@
               <h3>Retrieved Chunks</h3>
               <ul id="chunks"></ul>
             </div>
+            <div>
+              <h3>Run Info</h3>
+              <ul id="run-info"></ul>
+            </div>
+          </div>
+          <div class="feedback-panel">
+            <h3>Feedback</h3>
+            <textarea
+              id="feedback-comment"
+              rows="2"
+              placeholder="Optional note for this answer."
+            ></textarea>
+            <div class="feedback-actions">
+              <button type="button" id="feedback-up" class="secondary" disabled>
+                Helpful
+              </button>
+              <button type="button" id="feedback-down" class="secondary" disabled>
+                Not helpful
+              </button>
+              <span id="feedback-message" class="muted"></span>
+            </div>
           </div>
         </section>
       </section>

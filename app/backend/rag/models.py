@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -93,12 +93,30 @@ class Citation(BaseModel):
 
 
 class ChatResponse(BaseModel):
+    request_id: str
     answer: str
     citations: list[Citation]
     retrieved_chunk_ids: list[str]
     refusal: bool
     user_id: str
     provider: str
+    fallback_used: bool = False
+    fallback_reason: str | None = None
+    timings_ms: dict[str, float] = Field(default_factory=dict)
+
+
+class FeedbackRequest(BaseModel):
+    request_id: str
+    user_id: str
+    rating: Literal["up", "down"]
+    question: str = ""
+    answer: str = ""
+    comment: str = ""
+
+
+class FeedbackResponse(BaseModel):
+    status: str
+    request_id: str
 
 
 class HealthResponse(BaseModel):
@@ -109,4 +127,3 @@ class HealthResponse(BaseModel):
 
 
 JsonDict = dict[str, Any]
-

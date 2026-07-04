@@ -103,3 +103,29 @@ def _content_tokens(text: str) -> list[str]:
 def _query_mentions_stale(question: str) -> bool:
     terms = set(_content_tokens(question))
     return bool(terms.intersection({"2023", "legacy", "stale", "conflict", "superseded", "older"}))
+
+
+def retrieve_keyword_fallback(
+    question: str,
+    user: MockUser,
+    chunks: list[Chunk],
+    top_k: int,
+) -> list[RetrievedChunk]:
+    authorized = [chunk for chunk in chunks if can_access(user, chunk)]
+    candidates: list[RetrievedChunk] = []
+    for chunk in authorized:
+        lexical_score = _lexical_score(question, chunk)
+        if lexical_score <= 0:
+            continue
+        stale_penalty = 0.12 if chunk.stale and not _query_mentions_stale(question) else 0.0
+        score = lexical_score - stale_penalty
+        candidates.append(
+            RetrievedChunk(
+                chunk=chunk,
+                score=score,
+                vector_score=0.0,
+                lexical_score=lexical_score,
+            )
+        )
+    candidates.sort(key=lambda candidate: candidate.score, reverse=True)
+    return candidates[:top_k]

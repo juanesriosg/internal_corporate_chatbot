@@ -1,9 +1,6 @@
 # Local Run Playbook
 
-This playbook is for a reviewer or teammate running the chatbot on another
-local machine. The intended path is local-first: source documents are in
-`mock_data`, generated artifacts go to `.local`, and real secrets stay in
-`.env`.
+This playbook is for a reviewer or teammate running the chatbot on another local machine. The intended path is local-first: source documents are in `mock_data`, generated artifacts go to `.local`, and real secrets stay in `.env`.
 
 The app code is implemented. The commands below run the local-first prototype.
 
@@ -14,8 +11,7 @@ The app code is implemented. The commands below run the local-first prototype.
 - A terminal with access to this repository.
 - Optional: an OpenAI API key for the functional LLM path.
 
-No Azure account, AWS account, Docker runtime, or hosted vector database should
-be required for the basic local demo.
+No Azure account, AWS account, Docker runtime, or hosted vector database should be required for the basic local demo.
 
 ## 1. Create The Virtual Environment
 
@@ -46,12 +42,9 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
 
-Use Python 3.11 on Windows for this prototype. Python 3.12 and 3.13 can force
-Chroma's native `chroma-hnswlib` dependency to compile from source, which
-requires Microsoft C++ Build Tools and adds avoidable setup friction.
+Use Python 3.11 on Windows for this prototype. Python 3.12 and 3.13 can force Chroma's native `chroma-hnswlib` dependency to compile from source, which requires Microsoft C++ Build Tools and adds avoidable setup friction.
 
-Do not reuse the same `.venv` between WSL and Windows Git Bash. Create the
-environment in the terminal family you will use to run the app.
+Do not reuse the same `.venv` between WSL and Windows Git Bash. Create the environment in the terminal family you will use to run the app.
 
 ## 2. Configure Environment Variables
 
@@ -143,10 +136,10 @@ Expected generated artifacts:
   chunks.jsonl
   ingest_summary.json
   vector_index/
+  feedback.jsonl
 ```
 
-The exact artifact list may grow, but source documents must stay in `mock_data`
-and generated files must stay out of Git.
+The exact artifact list may grow, but source documents must stay in `mock_data` and generated files must stay out of Git.
 
 ## 5. Run The API
 
@@ -178,9 +171,7 @@ Open:
 http://127.0.0.1:5173
 ```
 
-The UI talks to the API URL shown in the form. For local smoke tests,
-`API_AUTH_ENABLED=false` is enough. If you want to test the API auth path
-locally, set:
+The UI talks to the API URL shown in the form. For local smoke tests, `API_AUTH_ENABLED=false` is enough. If you want to test the API auth path locally, set:
 
 ```text
 API_AUTH_ENABLED=true
@@ -189,8 +180,13 @@ API_BASIC_PASSWORD=<strong-password>
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
-The OpenAI key must stay in `.env` for the API process. Do not put it in
-`web/`.
+The OpenAI key must stay in `.env` for the API process. Do not put it in `web/`.
+
+The UI also has feedback buttons. Feedback is appended locally to:
+
+```text
+.local/feedback.jsonl
+```
 
 ## 7. Ask A Question
 
@@ -209,6 +205,7 @@ Expected response shape:
 
 ```json
 {
+  "request_id": "...",
   "answer": "...",
   "citations": [
     {
@@ -218,9 +215,20 @@ Expected response shape:
     }
   ],
   "retrieved_chunk_ids": ["..."],
-  "refusal": false
+  "refusal": false,
+  "provider": "openai",
+  "fallback_used": false,
+  "fallback_reason": null,
+  "timings_ms": {
+    "retrieval_ms": 123.4,
+    "context_ms": 0.1,
+    "generation_ms": 850.2,
+    "total_ms": 974.0
+  }
 }
 ```
+
+If the configured OpenAI provider is unavailable, the API falls back to local keyword retrieval plus the deterministic local answer composer. In that case the response uses `fallback_used: true`, `provider: "openai->local"`, and the answer starts with a short fallback notice.
 
 ## 8. Verify Access Control
 
@@ -239,14 +247,11 @@ Expected behavior:
 
 - No finance restricted chunks in `retrieved_chunk_ids`.
 - Neutral refusal or no authorized information response.
-- No disclosure that a restricted finance document exists unless the user is
-  authorized.
+- No disclosure that a restricted finance document exists unless the user is authorized.
 
 ## 9. Example Questions
 
-Use these examples after ingestion and API startup. They exercise normal
-retrieval, citations, stale-document handling, prompt-injection handling, and
-ACL refusals.
+Use these examples after ingestion and API startup. They exercise normal retrieval, citations, stale-document handling, prompt-injection handling, and ACL refusals.
 
 Public HR questions as `all_employee`:
 
@@ -332,8 +337,7 @@ Expected behavior:
 
 - Authorized questions return `refusal: false` and cite the relevant source.
 - Restricted questions from unauthorized users return a neutral refusal.
-- Prompt-injection content is described as untrusted document text, not followed
-  as an instruction.
+- Prompt-injection content is described as untrusted document text, not followed as an instruction.
 
 ## 10. Run Evaluation
 
@@ -349,6 +353,7 @@ Expected output:
 - Citation correctness checks.
 - Unauthorized retrieval rate.
 - Refusal correctness.
+- Average retrieval latency.
 - `.local/eval_results.json`.
 
 ## 11. Run Tests
@@ -394,9 +399,7 @@ If dependencies fail to install:
 - Confirm Python is 3.11.
 - Upgrade pip with `python -m pip install --upgrade pip`.
 - Recreate `.venv` from scratch.
-- If dependency install is slow on WSL, keep the project under the Linux
-  filesystem instead of a Windows-mounted path. Chroma has a larger dependency
-  tree and writes many files during installation.
+- If dependency install is slow on WSL, keep the project under the Linux filesystem instead of a Windows-mounted path. Chroma has a larger dependency tree and writes many files during installation.
 
 If `.env` is missing:
 
@@ -414,11 +417,9 @@ If Chroma reports an embedding dimension mismatch:
 - Rebuild the index after changing `LLM_PROVIDER` or `OPENAI_EMBEDDING_MODEL`.
 - Local smoke-test embeddings use 384 dimensions.
 - OpenAI `text-embedding-3-small` embeddings use 1536 dimensions.
-- Run `python -m app.backend.rag.ingest --source mock_data --out .local` with
-  the same provider settings you will use for chat/eval.
+- Run `python -m app.backend.rag.ingest --source mock_data --out .local` with the same provider settings you will use for chat/eval.
 
 If retrieval returns restricted documents:
 
 - Stop and fix ACL filtering before continuing.
-- The invariant is that unauthorized chunks must never reach prompt
-  construction.
+- The invariant is that unauthorized chunks must never reach prompt construction.
